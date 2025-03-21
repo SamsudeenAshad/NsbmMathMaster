@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "wouter";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { useAuth } from "@/context/AuthContext";
-import { useQuiz } from "@/context/QuizContext";
-import { useQuery } from "@tanstack/react-query";
-import { Result, User } from "@shared/schema";
+import { useLocation } from 'wouter';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { useAuth } from '@/context/AuthContext';
+import { useQuiz } from '@/context/QuizContext';
+import { useQuery } from '@tanstack/react-query';
+import { Result, User } from '@shared/schema';
 import { motion } from "framer-motion";
 import { ArrowLeft, FileDown, Share2, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -13,7 +13,7 @@ import { queryClient } from "@/lib/queryClient";
 
 export default function Leaderboard() {
   const { user } = useAuth();
-  const { quizResult } = useQuiz();
+  const { quizResult, questions } = useQuiz();
   const { toast } = useToast();
   const [location, navigate] = useLocation();
 
@@ -254,14 +254,14 @@ export default function Leaderboard() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <Card>
               <CardContent className="p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Accuracy</h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Marks percentage</h3>
                 <div className="flex justify-center mb-4">
                   <div className="relative h-32 w-32">
                     <svg className="h-full w-full" viewBox="0 0 36 36">
                       <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E2E8F0" strokeWidth="3" />
-                      <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#1E88E5" strokeWidth="3" strokeDasharray={`${userResult.correctAnswers / Math.max(1, (userResult.correctAnswers + userResult.incorrectAnswers)) * 100}, 100`} />
+                      <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#1E88E5" strokeWidth="3" strokeDasharray={`${(userResult.score / (questions.length * 2)) * 100}, 100`} />
                       <text x="18" y="20.5" textAnchor="middle" className="text-3xl font-bold" fill="#1E88E5">
-                        {Math.round(userResult.correctAnswers / Math.max(1, (userResult.correctAnswers + userResult.incorrectAnswers)) * 100)}%
+                        {Math.round((userResult.score / (questions.length * 2)) * 100)}%
                       </text>
                     </svg>
                   </div>
