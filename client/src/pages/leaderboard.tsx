@@ -256,7 +256,7 @@ export default function Leaderboard() {
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">Marks percentage</h3>
                 <div className="flex justify-center mb-4">
-                  <div className="relative h-32 w-32">
+                  <div className="relative h-32 w-32 flex items-center justify-center">
                     <svg className="h-full w-full" viewBox="0 0 36 36">
                       <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E2E8F0" strokeWidth="3" />
                       <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#1E88E5" strokeWidth="3" strokeDasharray={`${(userResult.score / (questions.length * 2)) * 100}, 100`} />
