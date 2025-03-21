@@ -21,6 +21,7 @@ interface QuizContextType {
   error: string | null;
   score: number | null;
   quizResult: Result | null;
+  completed: boolean;
 }
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
@@ -38,6 +39,7 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const [score, setScore] = useState<number | null>(null);
   const [quizResult, setQuizResult] = useState<Result | null>(null);
+  const [completed, setCompleted] = useState<boolean>(false);
   const webSocketRef = useRef<WebSocket | null>(null);
   
   // Connect to WebSocket for real-time quiz state updates
@@ -461,6 +463,7 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
         description: "Your results have been submitted.",
       });
       queryClient.invalidateQueries({ queryKey: ['/api/results'] });
+      setCompleted(true);
     },
     onError: (error: any) => {
       toast({
@@ -629,7 +632,8 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
              submitAnswerMutation.isPending || submitResultsMutation.isPending,
     error,
     score,
-    quizResult
+    quizResult,
+    completed
   };
   
   return <QuizContext.Provider value={value}>{children}</QuizContext.Provider>;

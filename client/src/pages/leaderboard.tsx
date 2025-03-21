@@ -20,9 +20,22 @@ export default function Leaderboard() {
   // Redirect to login if not authenticated
   useEffect(() => {
     if (!user) {
-      navigate("/");
+      navigate("/login");
     }
   }, [user, navigate]);
+
+  useEffect(() => {
+    const handleBackButton = (event: any) => {
+      event.preventDefault();
+      navigate("/login");
+    };
+
+    window.addEventListener("popstate", handleBackButton);
+
+    return () => {
+      window.removeEventListener("popstate", handleBackButton);
+    };
+  }, [navigate]);
 
   // Fetch all results for the leaderboard
   const { data: leaderboardData, isLoading } = useQuery<Result[]>({
@@ -177,17 +190,7 @@ export default function Leaderboard() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="flex items-center mb-6">
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="flex items-center text-primary-600 hover:text-primary-800"
-          onClick={handleBack}
-        >
-          <ArrowLeft className="h-5 w-5 mr-1" />
-          Back
-        </Button>
-      </div>
+      
       
       <div className="max-w-4xl mx-auto w-full">
         <div className="text-center mb-8">

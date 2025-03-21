@@ -12,15 +12,16 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function Quiz() {
   const { user } = useAuth();
-  const { 
-    quizState, 
-    questions, 
-    currentQuestionIndex, 
-    userAnswers, 
-    timeRemaining, 
-    submitAnswer, 
+  const {
+    quizState,
+    questions,
+    currentQuestionIndex,
+    userAnswers,
+    timeRemaining,
+    submitAnswer,
     nextQuestion,
-    loading 
+    loading,
+    completed,
   } = useQuiz();
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [location, navigate] = useLocation();
@@ -241,11 +242,15 @@ export default function Quiz() {
             </div>
 
             <div className="flex justify-end">
-              <Button 
+              <Button
                 onClick={handleNextQuestion}
-                disabled={loading}
+                disabled={loading || completed}
               >
-                {currentQuestionIndex < questions.length - 1 ? "Next Question" : "Finish Quiz"}
+                {completed
+                  ? "Already Submitted"
+                  : currentQuestionIndex < questions.length - 1
+                  ? "Next Question"
+                  : "Finish Quiz"}
               </Button>
             </div>
           </CardContent>
