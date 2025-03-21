@@ -578,7 +578,7 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
   
   // Submit final results
   const submitQuiz = async () => {
-    if (!user || questions.length === 0) return;
+    if (!user || questions.length === 0 || completed) return;
     
     // Instead of calculating the score client-side, we'll let the server calculate it
     // This is safer since the client might not have access to correctAnswer data
@@ -615,7 +615,7 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
     });
   };
   
-  // Provide quiz context
+    // Provide quiz context
   const value = {
     quizState,
     questions,

@@ -17,12 +17,12 @@ export default function Leaderboard() {
   const { toast } = useToast();
   const [location, navigate] = useLocation();
 
-  // Redirect to login if not authenticated
+ // Redirect to login if not authenticated
   useEffect(() => {
-    if (!user) {
+    if (!user && location !== "/login") {
       navigate("/login");
     }
-  }, [user, navigate]);
+  }, [user, navigate, location]);
 
   useEffect(() => {
     const handleBackButton = (event: any) => {
