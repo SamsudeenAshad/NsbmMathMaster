@@ -9,11 +9,15 @@ import { ArrowLeft, Clock, RefreshCw } from "lucide-react";
 import { queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
+
+
 export default function WaitingRoom() {
   const { user } = useAuth();
   const { quizState } = useQuiz();
   const [location, navigate] = useLocation();
   const { toast } = useToast();
+
+  
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -48,6 +52,8 @@ export default function WaitingRoom() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
+
+      
     >
       <div className="flex items-center mb-6">
         <Button 
@@ -110,4 +116,6 @@ export default function WaitingRoom() {
       </div>
     </motion.div>
   );
+
+  
 }

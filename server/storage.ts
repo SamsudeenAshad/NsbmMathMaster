@@ -153,16 +153,17 @@ export class MemStorage implements IStorage {
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.userIdCounter++;
     const now = new Date();
-    const user: User = { 
-      ...insertUser, 
-      id, 
+    const user: User = {
+      ...insertUser,
+      id,
       lastLogin: null,
-      createdAt: now
+      createdAt: now,
+      role: insertUser.role || 'student',
+      school: insertUser.school || null,
     };
     this.users.set(id, user);
     return user;
   }
-  
   async updateUser(id: number, userData: Partial<InsertUser> & { lastLogin?: Date }): Promise<User | undefined> {
     const user = this.users.get(id);
     if (!user) return undefined;
@@ -196,11 +197,12 @@ export class MemStorage implements IStorage {
       ...insertQuestion,
       id,
       createdAt: now,
+      difficulty: insertQuestion.difficulty || null,
+      createdBy: insertQuestion.createdBy || null,
     };
     this.questions.set(id, question);
     return question;
   }
-  
   async updateQuestion(id: number, questionData: Partial<InsertQuestion>): Promise<Question | undefined> {
     const question = this.questions.get(id);
     if (!question) return undefined;
@@ -298,23 +300,24 @@ export class MemStorage implements IStorage {
   async saveQuizAnswer(insertAnswer: InsertQuizAnswer): Promise<QuizAnswer> {
     const id = this.quizAnswerIdCounter++;
     const now = new Date();
-    
+
     // Check if the answer is correct
     const question = this.questions.get(insertAnswer.questionId);
-    const isCorrect = question ? 
+    const isCorrect = question ?
       (question.correctAnswer === insertAnswer.userAnswer) : false;
-    
+
     const answer: QuizAnswer = {
       ...insertAnswer,
       id,
-      isCorrect,
+      isCorrect: isCorrect,
       createdAt: now,
+      userAnswer: insertAnswer.userAnswer || null,
+      responseTimeSeconds: insertAnswer.responseTimeSeconds || null,
     };
-    
+
     this.quizAnswers.set(id, answer);
     return answer;
   }
-  
   async getQuizAnswersForUser(userId: number): Promise<QuizAnswer[]> {
     return Array.from(this.quizAnswers.values())
       .filter(answer => answer.userId === userId);
@@ -384,10 +387,10 @@ export class MemStorage implements IStorage {
   async saveResult(insertResult: InsertResult): Promise<Result> {
     const id = this.resultIdCounter++;
     const now = new Date();
-    
+
     // Recalculate the score server-side to ensure accuracy
     const calculatedScore = await this.calculateScore(insertResult.userId);
-    
+
     const result: Result = {
       ...insertResult,
       id,
@@ -398,25 +401,52 @@ export class MemStorage implements IStorage {
       incorrectAnswers: calculatedScore.incorrectAnswers,
       skippedAnswers: calculatedScore.skippedAnswers,
       averageResponseTime: calculatedScore.averageResponseTime,
+      completionTime: insertResult.completionTime || null,
+      rank: null,
     };
-    
+
     this.results.set(id, result);
-    
+
     // Calculate rankings
     await this.calculateRankings();
-    
+
     return this.results.get(id) as Result;
   }
-  
+  async updateResult(userId: number, resultData: Partial<InsertResult>): Promise<Result | undefined> {
+    const existingResult = Array.from(this.results.values()).find(result => result.userId === userId);
+    if (!existingResult) return undefined;
+
+    // Recalculate the score server-side to ensure accuracy
+    const calculatedScore = await this.calculateScore(userId);
+
+    const updatedResult: Result = {
+      ...existingResult,
+      ...resultData,
+      // Override submitted values with server-calculated values for security
+      score: calculatedScore.score,
+      correctAnswers: calculatedScore.correctAnswers,
+      incorrectAnswers: calculatedScore.incorrectAnswers,
+      skippedAnswers: calculatedScore.skippedAnswers,
+      averageResponseTime: calculatedScore.averageResponseTime,
+    };
+
+    this.results.set(existingResult.id, updatedResult);
+
+    // Calculate rankings
+    await this.calculateRankings();
+
+    return updatedResult;
+  }
+
   async listResults(): Promise<Result[]> {
     return Array.from(this.results.values());
   }
-  
+
   async calculateRankings(): Promise<void> {
     // Sort results by score in descending order
     const sortedResults = Array.from(this.results.values())
       .sort((a, b) => b.score - a.score);
-    
+
     // Update rank for each result
     sortedResults.forEach((result, index) => {
       const updatedResult = {

@@ -458,10 +458,6 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
       setQuizResult(typedData);
       setScore(typedData.score);
       navigate('/leaderboard');
-      toast({
-        title: "Quiz completed",
-        description: "Your results have been submitted.",
-      });
       queryClient.invalidateQueries({ queryKey: ['/api/results'] });
       setCompleted(true);
     },

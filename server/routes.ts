@@ -333,7 +333,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // The server will recalculate the score for security
       // Client-submitted scores are ignored in favor of server calculation
       // This ensures students can't manipulate their scores
-      const savedResult = await storage.saveResult(resultData);
+      let savedResult = await storage.getResult(resultData.userId);
+
+      if (savedResult) {
+        // Update existing result
+        savedResult = await storage.updateResult(resultData.userId, resultData);
+      } else {
+        // Create new result
+        savedResult = await storage.saveResult(resultData);
+      }
       
       res.status(201).json(savedResult);
     } catch (error) {

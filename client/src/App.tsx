@@ -1,4 +1,5 @@
 import { Switch, Route, useLocation } from "wouter";
+import { useEffect } from 'react';
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
@@ -44,9 +45,29 @@ function Router() {
 }
 
 function App() {
-  const [location] = useLocation();
+  const [location, navigate] = useLocation();
   const isLoginPage = location === "/";
-  
+
+  useEffect(() => {
+    // Store current location before refresh
+    const handleBeforeUnload = () => {
+      sessionStorage.setItem('currentLocation', location);
+    };
+
+    // Retrieve stored location on load
+    const storedLocation = sessionStorage.getItem('currentLocation');
+    if (storedLocation && location === '/') {
+      navigate(storedLocation);
+      sessionStorage.removeItem('currentLocation');
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [location, navigate]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>

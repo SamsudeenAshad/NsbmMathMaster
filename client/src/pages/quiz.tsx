@@ -34,6 +34,12 @@ export default function Quiz() {
     } else if (quizState !== "started") {
       if (quizState === "waiting") {
         navigate("/waiting-room");
+        useEffect(() => {
+          const interval = setInterval(() => {
+            window.location.reload();
+          }, 5000);
+          return () => clearInterval(interval); // Cleanup on unmount
+        }, []);
       } else if (quizState === "completed") {
         navigate("/leaderboard");
       }
