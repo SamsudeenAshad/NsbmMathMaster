@@ -88,7 +88,7 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
                 <Label htmlFor="school">School</Label>
                 <Select value={formData.school || ""} onValueChange={handleSchoolChange}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select your school" />
+                    <SelectValue placeholder="Enter your school name" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Royal College">Royal College</SelectItem>
@@ -107,6 +107,7 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
                 id="username"
                 name="username"
                 type="text"
+                placeholder="Enter your username"
                 value={formData.username}
                 onChange={handleInputChange}
                 autoComplete="username"
@@ -119,6 +120,7 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
                 id="password"
                 name="password"
                 type="password"
+                placeholder="Enter your password"
                 value={formData.password}
                 onChange={handleInputChange}
                 autoComplete="current-password"
@@ -142,7 +144,7 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
                   Logging in...
                 </>
               ) : (
-                "Login"
+                "Login >"
               )}
             </Button>
           </form>
