@@ -20,7 +20,7 @@ export default function Leaderboard() {
   // Redirect to login if not authenticated
   useEffect(() => {
     if (!user && location !== "/login") {
-      navigate("/login");
+      navigate("/leaderboard");
     }
   }, [user, navigate, location]);
 
