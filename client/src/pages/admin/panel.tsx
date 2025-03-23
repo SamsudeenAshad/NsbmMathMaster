@@ -61,25 +61,35 @@ export default function AdminPanel() {
   if (!user) return null;
 
   return (
-    <motion.div 
-      className="min-h-screen flex flex-col p-4"
+
+    <div className="relative min-h-screen flex items-center justify-center px-4 py-12 overflow-hidden">
+      <video
+      src="/images/bg_video2.mp4"
+      autoPlay
+      loop
+      muted
+      className="absolute z-0 w-auto min-w-full min-h-full max-w-none object-cover"
+      />
+      
+      <motion.div 
+      className="relative z-10 min-h-screen flex flex-col p-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-    >
+      >
       <div className="flex items-center justify-between mb-6">
         <Button 
-          variant="ghost" 
-          size="sm" 
-          className="flex items-center text-primary-600 hover:text-primary-800"
-          onClick={handleBack}
+        variant="ghost" 
+        size="sm" 
+        className="flex items-center text-primary-600 hover:text-primary-800"
+        onClick={handleBack}
         >
-          <ArrowLeft className="h-5 w-5 mr-1" />
-          Back
+        <ArrowLeft className="h-5 w-5 mr-1" />
+        Back
         </Button>
         <div>
-          <span className="text-gray-700 font-medium">Admin:</span>
-          <span className="text-primary-700 font-medium ml-1">{user.username}</span>
+        <span className="text-gray-700 font-medium">Admin:</span>
+        <span className="text-primary-700 font-medium ml-1">{user.username}</span>
         </div>
       </div>
       
@@ -87,74 +97,75 @@ export default function AdminPanel() {
         <h1 className="text-2xl font-bold text-gray-800 mb-6">Admin Panel</h1>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-gray-800">Quiz Status</h2>
-                <Badge variant={quizState === 'waiting' ? 'outline' : 'default'}>
-                  {quizState === 'waiting' ? 'Not Started' : 'In Progress'}
-                </Badge>
-              </div>
-              <p className="text-gray-600 mb-4">Students in waiting room: <span className="font-semibold">{studentCount}</span></p>
-              <Button 
-                className="w-full"
-                onClick={handleStartQuiz}
-                disabled={quizState !== 'waiting' || loading}
-              >
-                <Play className="h-4 w-4 mr-2" />
-                Start Quiz
-              </Button>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-6">
-              <h2 className="text-lg font-semibold text-gray-800 mb-4">Question Database</h2>
-              <p className="text-gray-600 mb-4">Total questions: <span className="font-semibold">{questions ? questions.length : 0}</span> / 80</p>
-              <div className="flex space-x-2">
-                <Button 
-                  className="flex-1" 
-                  onClick={handleAddQuestion}
-                >
-                  <Database className="h-4 w-4 mr-2" />
-                  Add Questions
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="flex-1"
-                  onClick={handleImportQuestions}
-                >
-                  Import JSON
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-6">
-              <h2 className="text-lg font-semibold text-gray-800 mb-4">Student Accounts</h2>
-              <p className="text-gray-600 mb-4">Registered students: <span className="font-semibold">{studentCount}</span></p>
-              <Button 
-                variant="outline" 
-                className="w-full"
-                onClick={handleManageStudents}
-              >
-                <Users className="h-4 w-4 mr-2" />
-                Manage Students
-              </Button>
-            </CardContent>
-          </Card>
+        <Card>
+          <CardContent className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-800">Quiz Status</h2>
+            <Badge variant={quizState === 'waiting' ? 'outline' : 'default'}>
+            {quizState === 'waiting' ? 'Not Started' : 'In Progress'}
+            </Badge>
+          </div>
+          <p className="text-gray-600 mb-4">Students in waiting room: <span className="font-semibold">{studentCount}</span></p>
+          <Button 
+            className="w-full"
+            onClick={handleStartQuiz}
+            disabled={quizState !== 'waiting' || loading}
+          >
+            <Play className="h-4 w-4 mr-2" />
+            Start Quiz
+          </Button>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-6">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Question Database</h2>
+          <p className="text-gray-600 mb-4">Total questions: <span className="font-semibold">{questions ? questions.length : 0}</span> / 80</p>
+          <div className="flex space-x-2">
+            <Button 
+            className="flex-1" 
+            onClick={handleAddQuestion}
+            >
+            <Database className="h-4 w-4 mr-2" />
+            Add Questions
+            </Button>
+            <Button 
+            variant="outline" 
+            className="flex-1"
+            onClick={handleImportQuestions}
+            >
+            Import JSON
+            </Button>
+          </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-6">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Student Accounts</h2>
+          <p className="text-gray-600 mb-4">Registered students: <span className="font-semibold">{studentCount}</span></p>
+          <Button 
+            variant="outline" 
+            className="w-full"
+            onClick={handleManageStudents}
+          >
+            <Users className="h-4 w-4 mr-2" />
+            Manage Students
+          </Button>
+          </CardContent>
+        </Card>
         </div>
         
         <div className="flex justify-end mt-4">
-          <Button 
-            variant="outline" 
-            onClick={() => navigate("/leaderboard")}
-          >
-            View Leaderboard
-          </Button>
+        <Button 
+          variant="outline" 
+          onClick={() => navigate("/leaderboard")}
+        >
+          View Leaderboard
+        </Button>
         </div>
       </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }

@@ -168,134 +168,147 @@ export default function Quiz() {
   const timerPercentage = (timeRemaining / 300) * 100;
   
   return (
-    <motion.div 
-      className="min-h-screen flex flex-col p-4"
+
+    <div className="relative min-h-screen flex items-center justify-center px-4 py-12 overflow-hidden">
+      <div className="absolute inset-0 z-0">
+      <video
+        src="/images/bg_video2.mp4"
+        autoPlay
+        loop
+        muted
+        className="w-full h-full object-cover"
+      />
+      </div>
+
+      <motion.div 
+      className="relative z-10 min-h-screen flex flex-col p-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
-    >
+      >
       <div className="max-w-4xl mx-auto w-full">
         <Card className="mb-6">
-          <CardContent className="p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h1 className="text-xl font-bold text-gray-800">NSBM MathsMaster Quiz</h1>
-              <div className="flex items-center">
-                <div className="h-6 w-6 rounded-full bg-primary-500 flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">Q</span>
-                </div>
-                <span className="ml-2 font-bold text-primary-700">
-                  {currentQuestionIndex + 1}
-                </span>
-                <span className="text-gray-500">/</span>
-                <span className="text-gray-500">
-                  {questions.length}
-                </span>
-              </div>
+        <CardContent className="p-6">
+          <div className="flex justify-between items-center mb-6">
+          <h1 className="text-xl font-bold text-gray-800">NSBM MathsMaster Quiz</h1>
+          <div className="flex items-center">
+            <div className="h-6 w-6 rounded-full bg-primary-500 flex items-center justify-center">
+            <span className="text-white text-xs font-bold">Q</span>
             </div>
+            <span className="ml-2 font-bold text-primary-700">
+            {currentQuestionIndex + 1}
+            </span>
+            <span className="text-gray-500">/</span>
+            <span className="text-gray-500">
+            {questions.length}
+            </span>
+          </div>
+          </div>
 
-            {/* Timer Component */}
-            <div className="mb-6">
-              <Progress value={timerPercentage} className="h-2.5" />
-              <div className="mt-1 text-right text-sm text-gray-500">
-                {timeRemaining} seconds remaining
-              </div>
+          {/* Timer Component */}
+          <div className="mb-6">
+          <Progress value={timerPercentage} className="h-2.5" />
+          <div className="mt-1 text-right text-sm text-gray-500">
+            {timeRemaining} seconds remaining
+          </div>
+          </div>
+
+          {/* Question */}
+          <div className="mb-8">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">
+            {currentQuestion.questionText}
+          </h2>
+
+          {/* Answer Options */}
+          <RadioGroup 
+            value={selectedAnswer || ""} 
+            onValueChange={handleAnswerChange}
+            className="space-y-3"
+          >
+            <label className="flex items-start p-3 border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer transition-colors">
+            <RadioGroupItem value="A" id="option-a" className="mt-1" />
+            <div className="ml-3">
+              <span className="font-medium text-gray-900">A. </span>
+              <span className="text-gray-700">{currentQuestion.optionA}</span>
             </div>
-
-            {/* Question */}
-            <div className="mb-8">
-              <h2 className="text-lg font-semibold text-gray-800 mb-4">
-                {currentQuestion.questionText}
-              </h2>
-
-              {/* Answer Options */}
-              <RadioGroup 
-                value={selectedAnswer || ""} 
-                onValueChange={handleAnswerChange}
-                className="space-y-3"
-              >
-                <label className="flex items-start p-3 border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer transition-colors">
-                  <RadioGroupItem value="A" id="option-a" className="mt-1" />
-                  <div className="ml-3">
-                    <span className="font-medium text-gray-900">A. </span>
-                    <span className="text-gray-700">{currentQuestion.optionA}</span>
-                  </div>
-                </label>
-                
-                <label className="flex items-start p-3 border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer transition-colors">
-                  <RadioGroupItem value="B" id="option-b" className="mt-1" />
-                  <div className="ml-3">
-                    <span className="font-medium text-gray-900">B. </span>
-                    <span className="text-gray-700">{currentQuestion.optionB}</span>
-                  </div>
-                </label>
-                
-                <label className="flex items-start p-3 border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer transition-colors">
-                  <RadioGroupItem value="C" id="option-c" className="mt-1" />
-                  <div className="ml-3">
-                    <span className="font-medium text-gray-900">C. </span>
-                    <span className="text-gray-700">{currentQuestion.optionC}</span>
-                  </div>
-                </label>
-                
-                <label className="flex items-start p-3 border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer transition-colors">
-                  <RadioGroupItem value="D" id="option-d" className="mt-1" />
-                  <div className="ml-3">
-                    <span className="font-medium text-gray-900">D. </span>
-                    <span className="text-gray-700">{currentQuestion.optionD}</span>
-                  </div>
-                </label>
-              </RadioGroup>
+            </label>
+            
+            <label className="flex items-start p-3 border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer transition-colors">
+            <RadioGroupItem value="B" id="option-b" className="mt-1" />
+            <div className="ml-3">
+              <span className="font-medium text-gray-900">B. </span>
+              <span className="text-gray-700">{currentQuestion.optionB}</span>
             </div>
-
-            <div className="flex justify-end">
-              <Button
-                onClick={handleNextQuestion}
-                disabled={loading || completed}
-              >
-                {completed
-                  ? "Already Submitted"
-                  : currentQuestionIndex < questions.length - 1
-                  ? "Next Question"
-                  : "Finish Quiz"}
-              </Button>
+            </label>
+            
+            <label className="flex items-start p-3 border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer transition-colors">
+            <RadioGroupItem value="C" id="option-c" className="mt-1" />
+            <div className="ml-3">
+              <span className="font-medium text-gray-900">C. </span>
+              <span className="text-gray-700">{currentQuestion.optionC}</span>
             </div>
-          </CardContent>
+            </label>
+            
+            <label className="flex items-start p-3 border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer transition-colors">
+            <RadioGroupItem value="D" id="option-d" className="mt-1" />
+            <div className="ml-3">
+              <span className="font-medium text-gray-900">D. </span>
+              <span className="text-gray-700">{currentQuestion.optionD}</span>
+            </div>
+            </label>
+          </RadioGroup>
+          </div>
+
+          <div className="flex justify-end">
+          <Button
+            onClick={handleNextQuestion}
+            disabled={loading || completed}
+          >
+            {completed
+            ? "Already Submitted"
+            : currentQuestionIndex < questions.length - 1
+            ? "Next Question"
+            : "Finish Quiz"}
+          </Button>
+          </div>
+        </CardContent>
         </Card>
 
         {/* Quiz Progress */}
         <Card>
-          <CardContent className="p-6">
-            <h3 className="text-md font-semibold text-gray-800 mb-4">Progress</h3>
-            <div className="grid grid-cols-10 gap-2">
-              {questions.map((question, index) => {
-                const answer = userAnswers.get(question.id);
-                let bgColor = "bg-gray-300 text-gray-500"; // Unanswered
-                
-                if (answer !== undefined) {
-                  if (answer === question.correctAnswer) {
-                    bgColor = "bg-green-500 text-white opacity-70"; // Correct
-                  } else {
-                    bgColor = "bg-red-500 text-white opacity-70"; // Incorrect
-                  }
-                }
-                
-                if (index === currentQuestionIndex) {
-                  bgColor = "bg-primary-600 text-white"; // Current question
-                }
-                
-                return (
-                  <div 
-                    key={question.id}
-                    className={`h-8 w-full flex items-center justify-center rounded-md text-xs font-medium ${bgColor}`}
-                  >
-                    {index + 1}
-                  </div>
-                );
-              })}
+        <CardContent className="p-6">
+          <h3 className="text-md font-semibold text-gray-800 mb-4">Progress</h3>
+          <div className="grid grid-cols-10 gap-2">
+          {questions.map((question, index) => {
+            const answer = userAnswers.get(question.id);
+            let bgColor = "bg-gray-300 text-gray-500"; // Unanswered
+            
+            if (answer !== undefined) {
+            if (answer === question.correctAnswer) {
+              bgColor = "bg-green-500 text-white opacity-70"; // Correct
+            } else {
+              bgColor = "bg-red-500 text-white opacity-70"; // Incorrect
+            }
+            }
+            
+            if (index === currentQuestionIndex) {
+            bgColor = "bg-primary-600 text-white"; // Current question
+            }
+            
+            return (
+            <div 
+              key={question.id}
+              className={`h-8 w-full flex items-center justify-center rounded-md text-xs font-medium ${bgColor}`}
+            >
+              {index + 1}
             </div>
-          </CardContent>
+            );
+          })}
+          </div>
+        </CardContent>
         </Card>
       </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }

@@ -47,74 +47,85 @@ export default function WaitingRoom() {
   if (!user) return null;
 
   return (
-    <motion.div 
-      className="min-h-screen flex flex-col p-4 md:p-8"
+    
+    <div className="relative min-h-screen flex items-center justify-center px-4 py-12 overflow-hidden">
+      <div className="absolute inset-0 z-0">
+      <video
+        src="/images/bg_video2.mp4"
+        autoPlay
+        loop
+        muted
+        className="w-full h-full object-cover"
+      />
+      </div>
+
+      <motion.div 
+      className="relative z-10 min-h-screen flex flex-col p-4 md:p-8"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-
-      
-    >
+      >
       <div className="flex items-center mb-6">
         <Button 
-          variant="ghost" 
-          size="sm" 
-          className="flex items-center text-primary-600 hover:text-primary-800"
-          onClick={handleBack}
+        variant="ghost" 
+        size="sm" 
+        className="flex items-center text-primary-600 hover:text-primary-800"
+        onClick={handleBack}
         >
-          <ArrowLeft className="h-5 w-5 mr-1" />
-          Back
+        <ArrowLeft className="h-5 w-5 mr-1" />
+        Back
         </Button>
       </div>
       
       <div className="flex-1 flex flex-col items-center justify-center">
         <motion.div 
-          className="max-w-md w-full"
-          initial={{ y: 20 }}
-          animate={{ y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
+        className="max-w-md w-full"
+        initial={{ y: 20 }}
+        animate={{ y: 0 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
         >
-          <Card>
-            <CardContent className="p-8 text-center">
-              <div className="relative mb-8 w-24 h-24 mx-auto">
-                <div className="absolute inset-0 rounded-full border-4 border-primary-200 border-t-primary-500 animate-spin"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Clock className="h-10 w-10 text-primary-500" />
-                </div>
-              </div>
-              
-              <h2 className="text-2xl font-bold text-gray-800 mb-3">Waiting for Admin</h2>
-              <p className="text-gray-600 mb-6">
-                Please wait while the administrator starts the quiz. The quiz will begin automatically once it's initiated.
-              </p>
-              
-              <div className="p-4 bg-primary-50 rounded-lg mb-4">
-                <p className="text-primary-700 font-medium">
-                  Stay on this screen to be automatically redirected when the quiz begins.
-                </p>
-              </div>
+        <Card>
+          <CardContent className="p-8 text-center">
+          <div className="relative mb-8 w-24 h-24 mx-auto">
+            <div className="absolute inset-0 rounded-full border-4 border-primary-200 border-t-primary-500 animate-spin"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+            <Clock className="h-10 w-10 text-primary-500" />
+            </div>
+          </div>
+          
+          <h2 className="text-2xl font-bold text-gray-800 mb-3">Waiting for Admin</h2>
+          <p className="text-gray-600 mb-6">
+            Please wait while the administrator starts the quiz. The quiz will begin automatically once it's initiated.
+          </p>
+          
+          <div className="p-4 bg-primary-50 rounded-lg mb-4">
+            <p className="text-primary-700 font-medium">
+            Stay on this screen to be automatically redirected when the quiz begins.
+            </p>
+          </div>
 
-              <Button
-                onClick={() => {
-                  // Force refetch quiz settings without page reload
-                  queryClient.invalidateQueries({ queryKey: ['/api/quiz/settings'] });
-                  toast({
-                    title: "Refreshing status",
-                    description: "Checking for quiz start...",
-                  });
-                }}
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-1"
-              >
-                <RefreshCw className="h-4 w-4" />
-                Refresh Status
-              </Button>
-            </CardContent>
-          </Card>
+          <Button
+            onClick={() => {
+            // Force refetch quiz settings without page reload
+            queryClient.invalidateQueries({ queryKey: ['/api/quiz/settings'] });
+            toast({
+              title: "Refreshing status",
+              description: "Checking for quiz start...",
+            });
+            }}
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-1"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Refresh Status
+          </Button>
+          </CardContent>
+        </Card>
         </motion.div>
       </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 
   
