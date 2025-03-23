@@ -212,7 +212,7 @@ export default function Leaderboard() {
                     <svg className="h-full w-full" viewBox="0 0 36 36">
                       <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E2E8F0" strokeWidth="3" />
                       <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#1E88E5" strokeWidth="3" strokeDasharray={`${(userResult.score / (questions.length * 2)) * 100}, 100`} />
-                      <text x="18" y="20.5" textAnchor="middle" className="text-xl font-bold" fill="#1E88E5">
+<text x="18" y="20.5" textAnchor="middle" className="text-xs font-bold" fill="#1E88E5">
                         {Math.round((userResult.score / (questions.length * 2)) * 100)}%
                       </text>
                     </svg>

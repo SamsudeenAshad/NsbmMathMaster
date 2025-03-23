@@ -462,11 +462,6 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
       setCompleted(true);
     },
     onError: (error: any) => {
-      toast({
-        title: "Failed to submit results",
-        description: error.message || "An error occurred",
-        variant: "destructive",
-      });
     }
   });
   
