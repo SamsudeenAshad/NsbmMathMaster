@@ -123,6 +123,8 @@ export default function SuperAdminPanel() {
     : 0;
 
   return (
+
+    
     <div className="max-w-6xl mx-auto px-4 py-8 fade-in">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center">

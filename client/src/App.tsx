@@ -72,7 +72,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <QuizProvider>
-          <div className="min-h-screen bg-gradient-to-br from-primary-50 to-white font-sans">
+          <div className="min-h-screen font-sans">
             {!isLoginPage && <AppHeader />}
             <Router />
             <Toaster />
