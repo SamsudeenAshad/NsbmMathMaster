@@ -419,7 +419,7 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
         userId: user.id,
         questionId,
         userAnswer: answer,
-        responseTimeSeconds: 60 - timeRemaining
+        responseTimeSeconds: 300 - timeRemaining
       });
       return res.json();
     },
@@ -471,7 +471,7 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
     
     if (quizState === 'started' && questions.length > 0) {
       // Reset timer when question changes or quiz starts
-      setTimeRemaining(60);
+      setTimeRemaining(300);
       
       timer = setInterval(() => {
         setTimeRemaining(prev => {
@@ -540,7 +540,7 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
   const nextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
-      setTimeRemaining(60); // Reset timer
+      setTimeRemaining(300); // Reset timer
     } else {
       // End of quiz
       submitQuiz();
@@ -581,7 +581,7 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
     // Prepare an array of all answered questions
     const answeredQuestions = Array.from(userAnswers.entries()).map(([questionId, answer]) => {
       // Capture response time from answers when available
-      const responseTime = 60; // Default to max time if not tracked
+      const responseTime = 300; // Default to max time if not tracked
       totalResponseTime += responseTime;
       return { questionId, answer };
     });
@@ -602,7 +602,7 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
       incorrectAnswers: 0, // Server will recalculate this
       skippedAnswers: skippedCount,
       averageResponseTime: averageTime,
-      completionTime: questions.length * 60 - timeRemaining // Approximate completion time
+      completionTime: questions.length * 300 - timeRemaining // Approximate completion time
     });
   };
   
