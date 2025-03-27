@@ -33,4 +33,8 @@ export default defineConfig({
     outDir: path.resolve(__dirname, "dist/public"),
     emptyOutDir: true,
   },
+  server: {
+    host: '0.0.0.0', // Bind to all network interfaces
+    port: 5000,      // Use port 5000
+  },
 });
