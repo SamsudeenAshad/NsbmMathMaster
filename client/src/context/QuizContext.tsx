@@ -16,6 +16,7 @@ interface QuizContextType {
   resetQuiz: () => Promise<void>;
   submitAnswer: (questionId: number, answer: string | null) => Promise<void>;
   nextQuestion: () => void;
+  resetCurrentQuestionIndex: () => void;
   submitQuiz: () => Promise<void>;
   loading: boolean;
   error: string | null;
@@ -536,6 +537,11 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
     }
   };
   
+  // Reset current question index function
+  const resetCurrentQuestionIndex = () => {
+    setCurrentQuestionIndex(0);
+  };
+
   // Next question function
   const nextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
@@ -617,6 +623,7 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
     resetQuiz,
     submitAnswer,
     nextQuestion,
+    resetCurrentQuestionIndex,
     submitQuiz,
     loading: loadingSettings || loadingQuestions || loadingAnswers || loadingResult || 
              startQuizMutation.isPending || resetQuizMutation.isPending || 

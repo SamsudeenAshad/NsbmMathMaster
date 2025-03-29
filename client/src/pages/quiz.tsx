@@ -10,6 +10,8 @@ import { Progress } from "@/components/ui/progress";
 import { queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
+const questionsPerPage = 5;
+
 export default function Quiz() {
   const { user } = useAuth();
   const {
@@ -20,10 +22,12 @@ export default function Quiz() {
     timeRemaining,
     submitAnswer,
     nextQuestion,
+    resetCurrentQuestionIndex,
     loading,
     completed,
   } = useQuiz();
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [currentBatch, setCurrentBatch] = useState(0);
   const [location, navigate] = useLocation();
   const { toast } = useToast();
 
@@ -48,28 +52,45 @@ export default function Quiz() {
 
   // Set selected answer when loading a new question
   useEffect(() => {
-    if (questions.length > 0 && currentQuestionIndex < questions.length) {
-      const currentQuestion = questions[currentQuestionIndex];
+    const startIndex = currentBatch * questionsPerPage;
+    const endIndex = startIndex + questionsPerPage;
+    const currentBatchQuestions = questions.slice(startIndex, endIndex);
+
+    if (currentBatchQuestions.length > 0 && currentQuestionIndex < currentBatchQuestions.length) {
+      const currentQuestion = currentBatchQuestions[currentQuestionIndex];
       const existingAnswer = userAnswers.get(currentQuestion.id);
       setSelectedAnswer(existingAnswer || null);
     }
-  }, [currentQuestionIndex, questions, userAnswers]);
+  }, [currentQuestionIndex, questions, userAnswers, currentBatch]);
 
   const handleAnswerChange = (value: string) => {
     setSelectedAnswer(value);
   };
 
   const handleNextQuestion = async () => {
-    if (questions.length === 0 || currentQuestionIndex >= questions.length) return;
-    
-    const currentQuestion = questions[currentQuestionIndex];
-    
+    const startIndex = currentBatch * questionsPerPage;
+    const endIndex = startIndex + questionsPerPage;
+    const currentBatchQuestions = questions.slice(startIndex, endIndex);
+
+    if (currentBatchQuestions.length === 0 || currentQuestionIndex >= currentBatchQuestions.length) return;
+
+    const currentQuestion = currentBatchQuestions[currentQuestionIndex];
+
     // Save the answer first
     await submitAnswer(currentQuestion.id, selectedAnswer);
-    
+
     // Then move to next question
-    nextQuestion();
-    setSelectedAnswer(null);
+    if (currentQuestionIndex < currentBatchQuestions.length - 1) {
+      nextQuestion(); // This increments currentQuestionIndex in QuizContext
+      setSelectedAnswer(null);
+    } else {
+      // Move to the next batch
+      setCurrentBatch(currentBatch + 1);
+      // Reset currentQuestionIndex to 0 for the new batch
+      nextQuestion(); // This increments currentQuestionIndex in QuizContext, so we need to reset it after
+      resetCurrentQuestionIndex();
+      setSelectedAnswer(null);
+    }
   };
 
   // Enhanced debugging for quiz state issues
@@ -279,31 +300,37 @@ export default function Quiz() {
         <CardContent className="p-6">
           <h3 className="text-md font-semibold text-gray-800 mb-4">Progress</h3>
           <div className="grid grid-cols-10 gap-2">
-          {questions.map((question, index) => {
-            const answer = userAnswers.get(question.id);
-            let bgColor = "bg-gray-300 text-gray-500"; // Unanswered
-            
-            if (answer !== undefined) {
-            if (answer === question.correctAnswer) {
-              bgColor = "bg-green-500 text-white opacity-70"; // Correct
-            } else {
-              bgColor = "bg-red-500 text-white opacity-70"; // Incorrect
-            }
-            }
-            
-            if (index === currentQuestionIndex) {
-            bgColor = "bg-primary-600 text-white"; // Current question
-            }
-            
-            return (
-            <div 
-              key={question.id}
-              className={`h-8 w-full flex items-center justify-center rounded-md text-xs font-medium ${bgColor}`}
-            >
-              {index + 1}
-            </div>
-            );
-          })}
+          {(() => {
+            const startIndex = currentBatch * questionsPerPage;
+            const endIndex = startIndex + questionsPerPage;
+            const currentBatchQuestions = questions.slice(startIndex, endIndex);
+
+            return currentBatchQuestions.map((question, index) => {
+              const answer = userAnswers.get(question.id);
+              let bgColor = "bg-gray-300 text-gray-500"; // Unanswered
+              
+              if (answer !== undefined) {
+                if (answer === question.correctAnswer) {
+                  bgColor = "bg-green-500 text-white opacity-70"; // Correct
+                } else {
+                  bgColor = "bg-red-500 text-white opacity-70"; // Incorrect
+                }
+              }
+              
+              if (index === currentQuestionIndex) {
+                bgColor = "bg-primary-600 text-white"; // Current question
+              }
+              
+              return (
+                <div 
+                  key={question.id}
+                  className={`h-8 w-full flex items-center justify-center rounded-md text-xs font-medium ${bgColor}`}
+                >
+                  {startIndex + index + 1}
+                </div>
+              );
+            });
+          })()}
           </div>
         </CardContent>
         </Card>
