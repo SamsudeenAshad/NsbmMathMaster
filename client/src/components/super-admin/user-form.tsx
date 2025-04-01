@@ -43,19 +43,12 @@ export default function UserForm({
 }: UserFormProps) {
   const { toast } = useToast();
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [schools, setSchools] = useState([]); // Manage schools locally
-
-  // Simulate fetching schools (replace with actual API call)
-  // useEffect(() => {
-  //   const fetchSchools = async () => {
-  //     const res = await fetch('/api/schools');
-  //     const data = await res.json();
-  //     setSchools(data);
-  //   };
-  //   fetchSchools();
-  // }, []);
-
-
+  
+  // Fetch schools for dropdown
+  const { data: schools = [] } = useQuery({
+    queryKey: ["/api/schools"],
+  });
+  
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
@@ -67,7 +60,7 @@ export default function UserForm({
       status: "active",
     },
   });
-
+  
   const createMutation = useMutation({
     mutationFn: async (data: FormData) => {
       const res = await apiRequest("POST", "/api/users", data);
@@ -81,11 +74,6 @@ export default function UserForm({
         variant: "default",
       });
       if (onSuccess) onSuccess();
-      // Add the new school to the list if it's not already present.
-      if (data.school && !schools.includes(data.school)) {
-        setSchools([...schools, data.school]);
-      }
-
     },
     onError: (error: any) => {
       setSubmitError(error.message || "Failed to create user");
@@ -96,7 +84,7 @@ export default function UserForm({
       });
     },
   });
-
+  
   const updateMutation = useMutation({
     mutationFn: async (data: FormData) => {
       const res = await apiRequest("PUT", `/api/users/${userId}`, data);
@@ -110,10 +98,6 @@ export default function UserForm({
         variant: "default",
       });
       if (onSuccess) onSuccess();
-      // Add the new school to the list if it's not already present.
-      if (data.school && !schools.includes(data.school)) {
-        setSchools([...schools, data.school]);
-      }
     },
     onError: (error: any) => {
       setSubmitError(error.message || "Failed to update user");
@@ -124,15 +108,15 @@ export default function UserForm({
       });
     },
   });
-
+  
   const onSubmit = (data: FormData) => {
     setSubmitError(null);
-
+    
     // If role is not student, remove school
     if (data.role !== "student") {
       data.school = "";
     }
-
+    
     if (userId) {
       // Don't send password if it's empty (for updates)
       if (!data.password) {
@@ -145,34 +129,170 @@ export default function UserForm({
       createMutation.mutate(data);
     }
   };
-
+  
   const selectedRole = form.watch("role");
-
+  
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        {/* ... other form fields ... */}
-
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Username</FormLabel>
+              <FormControl>
+                <Input 
+                  {...field} 
+                  placeholder="Enter username" 
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{userId ? "New Password (leave empty to keep current)" : "Password"}</FormLabel>
+              <FormControl>
+                <Input 
+                  {...field} 
+                  type="password" 
+                  placeholder={userId ? "Enter new password or leave empty" : "Enter password"} 
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  required={!userId}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email (Optional)</FormLabel>
+              <FormControl>
+                <Input 
+                  {...field} 
+                  type="email"
+                  placeholder="Enter email address (optional)" 
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="role"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Role</FormLabel>
+              <Select 
+                onValueChange={field.onChange} 
+                defaultValue={field.value}
+              >
+                <FormControl>
+                  <SelectTrigger className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                    <SelectValue placeholder="Select user role" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="student">Student</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                  <SelectItem value="superadmin">Super Admin</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
         {selectedRole === "student" && (
           <FormField
             control={form.control}
             name="school"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Add School</FormLabel>
-                <FormControl>
-                  <Input 
-                    placeholder="Enter school name" 
-                    {...field}
-                  />
-                </FormControl>
+                <FormLabel>School</FormLabel>
+                <Select 
+                  onValueChange={field.onChange} 
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                      <SelectValue placeholder="Select student's school" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {schools.map((school: { id: number; name: string }) => (
+                      <SelectItem key={school.id} value={school.name}>
+                        {school.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
           />
         )}
-
-        {/* ... rest of the form ... */}
+        
+        <FormField
+          control={form.control}
+          name="status"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Status</FormLabel>
+              <Select 
+                onValueChange={field.onChange} 
+                defaultValue={field.value}
+              >
+                <FormControl>
+                  <SelectTrigger className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                    <SelectValue placeholder="Select user status" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="inactive">Inactive</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        {submitError && (
+          <div className="text-red-500 text-sm">{submitError}</div>
+        )}
+        
+        <div className="flex justify-end space-x-2">
+          <Button 
+            type="button" 
+            variant="outline"
+            onClick={onSuccess}
+          >
+            Cancel
+          </Button>
+          <Button 
+            type="submit" 
+            className="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200"
+            disabled={createMutation.isPending || updateMutation.isPending}
+          >
+            {userId ? "Update User" : "Create User"}
+          </Button>
+        </div>
       </form>
     </Form>
   );

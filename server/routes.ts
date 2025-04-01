@@ -18,24 +18,6 @@ declare module 'express-session' {
 const MemoryStoreSession = MemoryStore(session);
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Add default student user if it doesn't exist
-  const defaultUser = {
-    username: "student",
-    password: "student",
-    role: "student",
-    school: "Other"
-  };
-  
-  try {
-    const existingUser = await storage.getUserByUsername(defaultUser.username);
-    if (!existingUser) {
-      await storage.createUser(defaultUser);
-      console.log("Created default student user");
-    }
-  } catch (error) {
-    console.error("Failed to create default user:", error);
-  }
-
   // Setup session middleware
   app.use(
     session({
