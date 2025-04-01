@@ -69,11 +69,27 @@ export default function StudentForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {schools.map((school: { id: number; name: string }) => (
-                    <SelectItem key={school.id} value={school.name}>
-                      {school.name}
-                    </SelectItem>
-                  ))}
+                  <SelectItem value="Ananda Balika Vidyalaya, Colombo">Ananda Balika Vidyalaya, Colombo</SelectItem>
+                  <SelectItem value="Ananda College, Colombo">Ananda College, Colombo</SelectItem>
+                  <SelectItem value="Asoka College, Colombo">Asoka College, Colombo</SelectItem>
+                  <SelectItem value="Devi Balika Vidyalaya, Colombo">Devi Balika Vidyalaya, Colombo</SelectItem>
+                  <SelectItem value="D.S. Senanayake College, Colombo">D.S. Senanayake College, Colombo</SelectItem>
+                  <SelectItem value="Gothami Balika Vidyalaya, Colombo">Gothami Balika Vidyalaya, Colombo</SelectItem>
+                  <SelectItem value="Hindu College, Colombo">Hindu College, Colombo</SelectItem>
+                  <SelectItem value="Isipathana College, Colombo">Isipathana College, Colombo</SelectItem>
+                  <SelectItem value="Mahanama College, Colombo">Mahanama College, Colombo</SelectItem>
+                  <SelectItem value="Muslim Ladies College, Colombo">Muslim Ladies College, Colombo</SelectItem>
+                  <SelectItem value="Nalanda College, Colombo">Nalanda College, Colombo</SelectItem>
+                  <SelectItem value="Ramanathan Hindu Ladies College, Colombo">Ramanathan Hindu Ladies College, Colombo</SelectItem>
+                  <SelectItem value="Royal College, Colombo">Royal College, Colombo</SelectItem>
+                  <SelectItem value="Sirimavo Bandaranaike Balika Vidyalaya, Colombo">Sirimavo Bandaranaike Balika Vidyalaya, Colombo</SelectItem>
+                  <SelectItem value="St Paul's Girls School, Colombo">St Paul's Girls School, Colombo</SelectItem>
+                  <SelectItem value="Thurston College, Colombo">Thurston College, Colombo</SelectItem>
+                  <SelectItem value="Visakha Vidyalaya, Colombo">Visakha Vidyalaya, Colombo</SelectItem>
+                  <SelectItem value="Lumbini College, Colombo">Lumbini College, Colombo</SelectItem>
+                  <SelectItem value="Mahinda Rajapaksha Vidyalaya, Homagama">Mahinda Rajapaksha Vidyalaya, Homagama</SelectItem>
+                  <SelectItem value="Rathnavali Balika MV, Gampaha">Rathnavali Balika MV, Gampaha</SelectItem>
+                  <SelectItem value="Other">Other</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
