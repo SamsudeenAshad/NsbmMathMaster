@@ -21,7 +21,8 @@ export default function QuestionDisplay({
   totalQuestions,
   disabled
 }: QuestionDisplayProps) {
-  const { userAnswers } = useQuiz();
+  const { userAnswers, completed } = useQuiz();
+  const isDisabled = disabled || completed;
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
 
   // Set initial answer from userAnswers if it exists
@@ -52,7 +53,7 @@ export default function QuestionDisplay({
         value={selectedAnswer || ""}
         onValueChange={handleAnswerChange}
         className="space-y-2"
-        disabled={disabled}
+        disabled={isDisabled}
       >
         {[
           { value: "A", text: question.optionA },

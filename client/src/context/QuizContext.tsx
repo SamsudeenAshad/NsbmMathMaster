@@ -576,7 +576,15 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
   
   // Submit final results
   const submitQuiz = async () => {
-    if (!user || questions.length === 0 || completed) return;
+    if (!user || questions.length === 0) return;
+    if (completed) {
+      toast({
+        title: "Quiz Already Submitted",
+        description: "You have already completed this quiz.",
+        variant: "destructive",
+      });
+      return;
+    }
     
     // Instead of calculating the score client-side, we'll let the server calculate it
     // This is safer since the client might not have access to correctAnswer data

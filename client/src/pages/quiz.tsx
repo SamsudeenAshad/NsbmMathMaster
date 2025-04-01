@@ -100,7 +100,10 @@ export default function Quiz() {
         <Card className="mb-6">
           <CardContent className="p-6">
             <div className="flex justify-between items-center mb-6">
-              <h1 className="text-xl font-bold text-gray-800">NSBM MathsMaster Quiz</h1>
+              <h1 className="text-xl font-bold text-gray-800">
+                NSBM MathMaster Quiz
+                {completed && <span className="ml-2 text-sm text-gray-500">(Completed)</span>}
+              </h1>
               <div className="flex items-center gap-4">
                 <div className="flex items-center">
                   <span className="font-bold text-primary-700">
