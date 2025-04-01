@@ -159,13 +159,48 @@ export default function UserForm({
             name="school"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Add School</FormLabel>
-                <FormControl>
-                  <Input 
-                    placeholder="Enter school name" 
-                    {...field}
-                  />
-                </FormControl>
+                <FormLabel>School</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a school" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Ananda Balika Vidyalaya, Colombo">Ananda Balika Vidyalaya, Colombo</SelectItem>
+                    <SelectItem value="Ananda College, Colombo">Ananda College, Colombo</SelectItem>
+                    <SelectItem value="Ananda Sastralaya, Kotte">Ananda Sastralaya, Kotte</SelectItem>
+                    <SelectItem value="Andiambalama Maha Vidyalaya">Andiambalama Maha Vidyalaya</SelectItem>
+                    <SelectItem value="Anula Vidyalaya, Nugegoda">Anula Vidyalaya, Nugegoda</SelectItem>
+                    <SelectItem value="Asoka College, Colombo">Asoka College, Colombo</SelectItem>
+                    <SelectItem value="Bandaranayaka Vidyalaya, Gampaha">Bandaranayaka Vidyalaya, Gampaha</SelectItem>
+                    <SelectItem value="Bandaranayake Central College, Veyangoda">Bandaranayake Central College, Veyangoda</SelectItem>
+                    <SelectItem value="Basilica College, Ragama">Basilica College, Ragama</SelectItem>
+                    <SelectItem value="Batuwatta Maha Vidyalaya, Ragama">Batuwatta Maha Vidyalaya, Ragama</SelectItem>
+                    <SelectItem value="Bishop's College, Colombo">Bishop's College, Colombo</SelectItem>
+                    <SelectItem value="Biyagama Madhya Maha Vidyalaya, Biyagama">Biyagama Madhya Maha Vidyalaya, Biyagama</SelectItem>
+                    <SelectItem value="Bomiriya Central College, Bomiriya, Kaduwela">Bomiriya Central College, Bomiriya, Kaduwela</SelectItem>
+                    <SelectItem value="Boys' Model College, Malabe">Boys' Model College, Malabe</SelectItem>
+                    <SelectItem value="D.S. Senanayake College, Colombo">D.S. Senanayake College, Colombo</SelectItem>
+                    <SelectItem value="Devi Balika Vidyalaya, Colombo">Devi Balika Vidyalaya, Colombo</SelectItem>
+                    <SelectItem value="Hameed Al Husseinie College">Hameed Al Husseinie College</SelectItem>
+                    <SelectItem value="Hindu College, Colombo">Hindu College, Colombo</SelectItem>
+                    <SelectItem value="Isipathana College, Colombo">Isipathana College, Colombo</SelectItem>
+                    <SelectItem value="Mahanama College, Colombo">Mahanama College, Colombo</SelectItem>
+                    <SelectItem value="Muslim Ladies College, Colombo">Muslim Ladies College, Colombo</SelectItem>
+                    <SelectItem value="Nalanda College, Colombo">Nalanda College, Colombo</SelectItem>
+                    <SelectItem value="President's College">President's College</SelectItem>
+                    <SelectItem value="Prince of Wales' College, Moratuwa">Prince of Wales' College, Moratuwa</SelectItem>
+                    <SelectItem value="Royal College, Colombo">Royal College, Colombo</SelectItem>
+                    <SelectItem value="Sirimavo Bandaranaike Balika Vidyalaya, Colombo">Sirimavo Bandaranaike Balika Vidyalaya, Colombo</SelectItem>
+                    <SelectItem value="Sri Dharmaloka College">Sri Dharmaloka College</SelectItem>
+                    <SelectItem value="SRI Subhuthi National school">SRI Subhuthi National school</SelectItem>
+                    <SelectItem value="St Paul's Girls School, Colombo">St Paul's Girls School, Colombo</SelectItem>
+                    <SelectItem value="Thurston College, Colombo">Thurston College, Colombo</SelectItem>
+                    <SelectItem value="Visakha Vidyalaya, Colombo">Visakha Vidyalaya, Colombo</SelectItem>
+                    <SelectItem value="Other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
