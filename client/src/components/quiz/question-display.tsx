@@ -1,8 +1,10 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Question } from "@shared/schema";
+import { useQuiz } from "@/context/QuizContext";
 
 interface QuestionDisplayProps {
   question: Question;
@@ -19,7 +21,18 @@ export default function QuestionDisplay({
   totalQuestions,
   disabled
 }: QuestionDisplayProps) {
+  const { userAnswers } = useQuiz();
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+
+  // Set initial answer from userAnswers if it exists
+  useEffect(() => {
+    const existingAnswer = userAnswers.get(question.id);
+    if (existingAnswer) {
+      setSelectedAnswer(existingAnswer);
+    } else {
+      setSelectedAnswer(null);
+    }
+  }, [question.id, userAnswers]);
 
   const handleAnswerChange = (value: string) => {
     setSelectedAnswer(value);

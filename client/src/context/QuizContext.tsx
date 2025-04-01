@@ -507,30 +507,34 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
     };
   }, [quizState, currentQuestionIndex, questions.length]);
   
-  // Submit answer function
+  // Submit answer function with optimistic updates
   const submitAnswer = async (questionId: number, answer: string | null) => {
     try {
-      // Check if this question has already been answered with the same answer
       const existingAnswer = userAnswers.get(questionId);
       
-      // Only submit if:
-      // 1. The question hasn't been answered before, OR
-      // 2. The answer is different from the previous one
-      if (existingAnswer === undefined || existingAnswer !== answer) {
-        console.log(`QuizContext: Submitting answer for question ${questionId}: ${answer}`);
-        
-        // Update local state first for immediate feedback
-        const newAnswers = new Map(userAnswers);
-        newAnswers.set(questionId, answer);
-        setUserAnswers(newAnswers);
-        
-        // Submit to server
-        await submitAnswerMutation.mutateAsync({ questionId, answer });
-      } else {
-        console.log(`QuizContext: Skipping duplicate submission for question ${questionId}`);
+      // Skip if the answer is the same
+      if (existingAnswer === answer) {
+        return;
       }
+
+      // Optimistically update UI
+      const newAnswers = new Map(userAnswers);
+      newAnswers.set(questionId, answer);
+      setUserAnswers(newAnswers);
       
-      // Return void to match the interface
+      // Submit to server in background
+      submitAnswerMutation.mutate(
+        { questionId, answer },
+        {
+          onError: (error) => {
+            // Revert on error
+            const revertAnswers = new Map(userAnswers);
+            revertAnswers.set(questionId, existingAnswer);
+            setUserAnswers(revertAnswers);
+            console.error('Failed to submit answer:', error);
+          }
+        }
+      );
     } catch (error) {
       console.error('Failed to submit answer:', error);
     }
