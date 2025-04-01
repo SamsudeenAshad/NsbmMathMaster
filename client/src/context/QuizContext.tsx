@@ -539,8 +539,11 @@ export function QuizProvider({ children }: { children: React.ReactNode }) {
   // Next question function
   const nextQuestion = () => {
     if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
-      setTimeRemaining(300); // Reset timer
+      setCurrentQuestionIndex(prev => Math.min(prev + 1, questions.length - 1));
+      // Only reset timer when moving to a new batch of questions
+      if ((currentQuestionIndex + 1) % 5 === 0) {
+        setTimeRemaining(300);
+      }
     } else {
       // End of quiz
       submitQuiz();
