@@ -30,9 +30,15 @@ export default function StudentForm() {
     }
   });
   
-  const { data: schools = [], isLoading: isLoadingSchools } = useQuery({
-    queryKey: ["/api/schools"],
+  const { data: users = [], isLoading: isLoadingSchools } = useQuery({
+    queryKey: ["/api/users"],
   });
+  
+  // Get unique schools from users
+  const schools = [...new Set(users
+    .filter(user => user.school)
+    .map(user => ({ id: user.id, name: user.school })))
+  ];
   
   const onSubmit = async (data: FormData) => {
     setSubmitError(null);
