@@ -169,7 +169,7 @@ export default function Leaderboard() {
       <div className="max-w-4xl mx-auto w-full">
         <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">Quiz Results</h1>
-        <p className="text-gray-600">Congratulations on completing the NSBM MathsMaster Quiz!</p>
+        <p className="text-gray-600">Congratulations on completing the NSBM MathMaster Quiz!</p>
         </div>
 
         {userResult && (

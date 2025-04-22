@@ -31,7 +31,7 @@ export default function AppHeader() {
     <header className="bg-primary-100 shadow-sm p-4">
       <div className="container mx-auto flex justify-between items-center">
         <h1 className="text-xl font-bold text-primary-900">
-          NSBM MathsMaster
+          NSBM MathMaster
         </h1>
         <div className="flex items-center gap-4">
           {user && (

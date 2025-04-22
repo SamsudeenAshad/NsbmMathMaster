@@ -104,6 +104,12 @@ export default function WaitingRoom() {
             </p>
           </div>
 
+            <div className="p-4 bg-primary-50 rounded-lg mb-4">
+              <p className="text-primary-700 font-medium text-lg text-red-500">
+            If you you get blank page please refresh the page
+              </p>
+            </div>
+
           <Button
             onClick={() => {
             // Force refetch quiz settings without page reload

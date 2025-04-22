@@ -18,7 +18,7 @@ export function Header({ title }: HeaderProps) {
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         <div className="flex items-center space-x-2">
           <h1 className="text-xl font-semibold text-primary">
-            {title || "NSBM MathsMaster"}
+            {title || "NSBM MathMaster"}
           </h1>
           {user && (
             <span className="text-sm text-gray-500">
